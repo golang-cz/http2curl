@@ -77,6 +77,14 @@ func GetCurlCommand(req *http.Request) (*CurlCommand, error) {
 		command.append("-H", bashEscape(fmt.Sprintf("%s: %s", k, strings.Join(req.Header[k], " "))))
 	}
 
+	if len(req.Cookies()) > 0 {
+		command.append("--cookie")
+
+		for _, cookie := range req.Cookies() {
+			command.append(bashEscape(cookie.String()))
+		}
+	}
+
 	command.append(bashEscape(requestURL))
 
 	command.append("--compressed")
